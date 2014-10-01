@@ -1,0 +1,4 @@
+[submodule "plumbers2014/reveal.js"]
+	path = plumbers2014/reveal.js
+	url = gh:hakimel/reveal.js
+  branch = 2.6.2
