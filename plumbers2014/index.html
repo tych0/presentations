@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <link rel="stylesheet" href="reveal.js/css/reveal.min.css">
-    <link rel="stylesheet" href="reveal.js/css/theme/default.css" id="theme">
+    <link rel="stylesheet" href="reveal.js/css/theme/simple.css" id="theme">
 
     <!-- For syntax highlighting -->
     <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
@@ -29,9 +29,52 @@
         document.getElementsByTagName( 'head' )[0].appendChild( link );
       }
     </script>
+
+    <style>
+      #canonicalLogoIntro {
+        vertical-align: middle;
+        display: inline-block;
+      }
+      #canonicalLogoIntro > img {
+        padding-bottom: 2px;
+        height: 30px;
+        width: auto;
+        border: none;
+        margin: 0;
+        box-shadow: none;
+      }
+
+      #logo {
+        opacity: 0;
+        -webkit-animation: fadein ease-in 1;
+        -webkit-animation-duration: 1s;
+        -webkit-animation-fill-mode: forwards;
+        -webkit-animation-play-state: paused;
+      }
+      #logo > img {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        width: 100px;
+        height: auto;
+      }
+
+      @-webkit-keyframes fadein {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @-webkit-keyframes fadeout {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+
+    </style>
   </head>
 
   <body>
+
+    <div id="logo"><img src="oh.png" alt="canonical logo"></img></div>
 
     <div class="reveal">
       <div class="slides">
@@ -39,14 +82,16 @@
         <section>
           <h1>LXC + CRIU</h1>
           <h3>Status, future work</h3>
-          <p>
-            <small><a href="http://tycho.ws">Tycho Andersen</a> @ <a href="http://canonical.com">canoncial.com</a></small>
-          </p>
+          <div>
+            <span><a href="http://tycho.ws">Tycho.Andersen</a> @</span>
+            <span id="canonicalLogoIntro"><img src="canonical.png" alt="Canonical"></img></span>
+            <span>.com</span>
+          </div>
         </section>
 
         <section>
           <div>
-            <h1>What exists today?</h1>
+            <h2>What exists today?</h2>
             <div style="text-align: left; padding-left: 2em;">
               <code class="fragment">$ lxc-checkpoint --help</code>
             </div>
@@ -55,7 +100,7 @@
                 <li class="fragment">frontend for criu</li>
                 <li class="fragment">manages network bits</li>
                 <li class="fragment">mounts rootfs correctly</li>
-                <li class="fragment">error checking for unsupported options</li>
+                <li class="fragment">error checking for unsupported configurations</li>
                 <li class="fragment">reattaches so other <code>lxc-*</code> tools work</li>
               </ul>
             </div>
@@ -63,16 +108,26 @@
         </section>
 
         <section>
-          <h1>Future work</h1>
+          <h2>Future work</h2>
           <ul>
             <li class="fragment">Support all filesystem options</li>
             <li class="fragment">Support criu's pre-dump</li>
+            <li class="fragment">Better checking for unsupported things</li>
             <li class="fragment">General predictability</li>
           </ul>
         </section>
 
         <section>
           <h1>Demo</h1>
+        </section>
+
+        <section>
+          <h1>Thanks!</h1>
+          <div>
+            <span><a href="http://tycho.ws">Tycho.Andersen</a> @</span>
+            <span id="canonicalLogoIntro"><img src="canonical.png" alt="Canonical"></img></span>
+            <span>.com</span>
+          </div>
         </section>
       </div>
     </div>
@@ -106,6 +161,14 @@
           { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
           { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
         ]
+      });
+
+      Reveal.addEventListener( 'slidechanged', function( event ) {
+        if (!Reveal.isFirstSlide() && !Reveal.isLastSlide()) {
+          document.getElementById('logo').style.webkitAnimation = "fadein 1s running forwards";
+        } else {
+          document.getElementById('logo').style.webkitAnimation = "fadeout 1s running forwards";
+        }
       });
 
     </script>
