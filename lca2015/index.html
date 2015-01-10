@@ -80,13 +80,119 @@
       <div class="slides">
 
         <section>
-          <h1>LXD</h1>
-          <h3>The hypervisor that isn't</h3>
+          <img src="lxd.jpg" alt="lxd" style="border: none; box-shadow: none;"></img>
+          <h3>LXD: The hypervisor that isn't</h3>
           <div>
             <span><a href="http://tycho.ws">Tycho.Andersen</a> @</span>
             <span id="canonicalLogoIntro"><img src="canonical.png" alt="Canonical"></img></span>
             <span>.com</span>
           </div>
+        </section>
+
+        <section>
+          <h3>What is <img src="lxd.jpg" alt="lxd" style="border: none; box-shadow: none; height: 1.55em; margin-top: 0px; margin-bottom: -10px;"></img>?</h3>
+          <div>
+            <ul>
+              <li class="fragment">Based on Linux Containers (LXC)</li>
+              <li class="fragment">Secure by default: user namespaces, cgroups, AppArmor, etc.</li>
+              <li class="fragment">A REST API for managing system containers</li>
+              <li class="fragment">A daemon that can do hypervisor-y things</li>
+              <li class="fragment">A framework for managing container base images</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h3>What isn't <img src="lxd.jpg" alt="lxd" style="border: none; box-shadow: none; height: 1.55em; margin-top: 0px; margin-bottom: -10px;"></img>?</h3>
+          <div>
+            <ul>
+              <li class="fragment">A network management tool</li>
+              <li class="fragment">A storage management tool</li>
+              <li class="fragment">An application container tool</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h3><img src="lxd.jpg" alt="lxd" style="border: none; box-shadow: none; height: 1.55em; margin-top: 0px; margin-bottom: -10px;"></img> &nbsp; API endpoints</h3>
+          <div>
+            <ul>
+              <li class="fragment"><code>containers</code></li>
+              <li class="fragment"><code>images</code></li>
+              <li class="fragment"><code>networks</code></li>
+              <li class="fragment"><code>operations</code></li>
+              <li class="fragment">other administrative ones</li>
+              <li class="fragment">secured by client certificates and TLS 1.2</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h3><code>containers</code> endpoint</h3>
+          <div style="text-align: left" class="fragment">
+            <code><span style="color: grey">wget --no-check-certificate --certificate=~/.config/lxc/cert.pem --private-key=~/.config/lxc/key.pem -O - -q</span> https://127.0.0.1:8443/1.0/containers/foo</code>
+          </div>
+          <div style="text-align: left" class="fragment">
+            <div style="color: grey">{"type":"sync","result":"success","metadata":</div>
+            <div>&nbsp; &nbsp;{"name":"foo","profiles":[],"config":[],"status":{"state":"RUNNING","state_code":3}}</div>
+            <div style="color: grey">}</div>
+          </div>
+        </section>
+
+        <section>
+          <h3><code>networks</code> endpoint</h3>
+          <div style="text-align: left;" class="fragment">
+            <span style="color: grey">wget --no-check-certificate --certificate=~/.config/lxc/client.crt --private-key=~/.config/lxc/client.key -O - -q</span> https://127.0.0.1:8443/1.0/networks
+          </div>
+          <div style="text-align: left;" class="fragment">
+            <div style="color: grey">{"type":"sync","result":"success","metadata":[</div>
+            <ul style="list-style-type: none;">
+              <li class="fragment">"/1.0/networks/lo",</li>
+              <li class="fragment">"/1.0/networks/wlan0",</li>
+              <li class="fragment">"/1.0/networks/lxcbr0",</li>
+              <li class="fragment">"/1.0/networks/virbr0"</li>
+            </ul>
+            <div style="color: grey">]}</div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Container Migration</h3>
+          <div>
+            <ul>
+              <li class="fragment">Implement using CRIU and p.haul.</li>
+              <li class="fragment">Negotiated over websockets</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h3>Image Workflow</h3>
+          <div>
+            <ul>
+              <li class="fragment">Snapshot (running) containers as images</li>
+              <li class="fragment">All LXD instances are image servers</li>
+              <li class="fragment">Clients can publish private or public images</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h3><img src="lxd.jpg" alt="lxd" style="border: none; box-shadow: none; height: 1.55em; margin-top: 0px; margin-bottom: -10px;"></img> roadmap</h3>
+          <div>
+            <ul>
+              <li class="fragment">0.1 - Last week of January, container management only</li>
+              <li class="fragment">0.2 - February 18: <em>Images, experimental migration, bugfixes, oh my!</em></li>
+              <li class="fragment">0.3 - Summer 2015: Full specification implementation</li>
+              <li class="fragment">0.? - Hardware hardened containers</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <img src="lxd.jpg" alt="lxd" style="border: none; box-shadow: none;"></img>
+          <h2>Kia ora!</h2>
+          <div><a href="https://github.com/lxc/lxd/">github.com/lxc/lxd</a></div>
         </section>
 
       </div>
