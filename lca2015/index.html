@@ -114,13 +114,25 @@
         </section>
 
         <section>
-          <h3><img src="lxd.jpg" alt="lxd" style="border: none; box-shadow: none; height: 1.55em; margin-top: 0px; margin-bottom: -10px;"></img> &nbsp; API endpoints</h3>
+          <h3>What is <img src="lxd.jpg" alt="lxd" style="border: none; box-shadow: none; height: 1.55em; margin-top: 0px; margin-bottom: -10px;"></img>?</h3>
+          <div style="color: grey">
+            <ul>
+              <li>Based on Linux Containers (LXC)</li>
+              <li>Secure by default: user namespaces, cgroups, AppArmor, etc.</li>
+              <li style="color: black">A REST API for managing system containers</li>
+              <li>A daemon that can do hypervisor-y things</li>
+              <li>A framework for managing container base images</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h3><img src="lxd.jpg" alt="lxd" style="border: none; box-shadow: none; height: 1.55em; margin-top: 0px; margin-bottom: -10px;"></img> &nbsp; API</h3>
           <div>
             <ul>
               <li class="fragment"><code>containers</code></li>
               <li class="fragment"><code>images</code></li>
               <li class="fragment"><code>networks</code></li>
-              <li class="fragment"><code>operations</code></li>
               <li class="fragment">other administrative ones</li>
               <li class="fragment">secured by client certificates and TLS 1.2</li>
             </ul>
@@ -128,40 +140,82 @@
         </section>
 
         <section>
+          <h3>Creating a container</h3>
+          <div style="text-align: left" class="fragment">
+            <code><span style="color: grey">wget --no-check-certificate --certificate=~/.config/lxc/client.crt --private-key=~/.config/lxc/client.key -O - -q</span> https://127.0.0.1:8443/1.0/containers --method=POST --body-data='{"name": "manual", ...}'</code>
+          </div>
+          <br></br>
+          <code class="fragment">{"type":"async","operation":"/1.0/operations/ae5b7709-213d-4b51-b4e2-825e4ac9d45c"}</code>
+        </section>
+
+        <section>
           <h3><code>containers</code> endpoint</h3>
           <div style="text-align: left" class="fragment">
             <code><span style="color: grey">wget --no-check-certificate --certificate=~/.config/lxc/cert.pem --private-key=~/.config/lxc/key.pem -O - -q</span> https://127.0.0.1:8443/1.0/containers/foo</code>
           </div>
-          <div style="text-align: left" class="fragment">
+          <br></br>
+          <code style="text-align: left" class="fragment">
             <div style="color: grey">{"type":"sync","result":"success","metadata":</div>
-            <div>&nbsp; &nbsp;{"name":"foo","profiles":[],"config":[],"status":{"state":"RUNNING","state_code":3}}</div>
+            <div>&nbsp; &nbsp;{"name":"foo", "config":[], "profiles":[],</div>
+            <div>&nbsp; &nbsp; &nbsp; &nbsp;"status":{"state":"RUNNING", ...}}</div>
             <div style="color: grey">}</div>
-          </div>
+          </code>
         </section>
 
         <section>
           <h3><code>networks</code> endpoint</h3>
           <div style="text-align: left;" class="fragment">
-            <span style="color: grey">wget --no-check-certificate --certificate=~/.config/lxc/client.crt --private-key=~/.config/lxc/client.key -O - -q</span> https://127.0.0.1:8443/1.0/networks
+            <code><span style="color: grey">wget --no-check-certificate --certificate=~/.config/lxc/client.crt --private-key=~/.config/lxc/client.key -O - -q</span> https://127.0.0.1:8443/1.0/networks</code>
           </div>
+          <br></br>
           <div style="text-align: left;" class="fragment">
-            <div style="color: grey">{"type":"sync","result":"success","metadata":[</div>
-            <ul style="list-style-type: none;">
-              <li class="fragment">"/1.0/networks/lo",</li>
-              <li class="fragment">"/1.0/networks/wlan0",</li>
-              <li class="fragment">"/1.0/networks/lxcbr0",</li>
-              <li class="fragment">"/1.0/networks/virbr0"</li>
-            </ul>
-            <div style="color: grey">]}</div>
+            <code style="color: grey">{"type":"sync","result":"success","metadata":[</code>
+            <div>
+              <ul style="list-style-type: none;">
+                <li class="fragment"><code>"/1.0/networks/lo",</code></li>
+                <li class="fragment"><code>"/1.0/networks/wlan0",</code></li>
+                <li class="fragment"><code>"/1.0/networks/lxcbr0",</code></li>
+                <li class="fragment"><code>"/1.0/networks/virbr0"</code></li>
+              </ul>
+            </div>
+            <code style="color: grey">]}</code>
           </div>
         </section>
 
         <section>
-          <h3>Container Migration</h3>
-          <div>
+          <h3>What is <img src="lxd.jpg" alt="lxd" style="border: none; box-shadow: none; height: 1.55em; margin-top: 0px; margin-bottom: -10px;"></img>?</h3>
+          <div style="color: grey">
             <ul>
-              <li class="fragment">Implement using CRIU and p.haul.</li>
-              <li class="fragment">Negotiated over websockets</li>
+              <li>Based on Linux Containers (LXC)</li>
+              <li>Secure by default: user namespaces, cgroups, AppArmor, etc.</li>
+              <li>A REST API for managing system containers</li>
+              <li style="color: black">A daemon that can do hypervisor-y things</li>
+              <li>A framework for managing container base images</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <img src="snapshot.jpg" alt="Snapshotting" style="border: none; box-shadow: none;"></img>
+        </section>
+
+        <section>
+          <img src="injection.jpg" alt="File Injection" style="border: none; box-shadow: none;"></img>
+        </section>
+
+        <section>
+          <img src="migration.jpg" alt="Container Migration" style="border: none; box-shadow: none;"></img>
+        </section>
+
+        <section>
+          <h3>What is <img src="lxd.jpg" alt="lxd" style="border: none; box-shadow: none; height: 1.55em; margin-top: 0px; margin-bottom: -10px;"></img>?</h3>
+          <div style="color: grey">
+            <ul>
+              <li>Based on Linux Containers (LXC)</li>
+              <li>Secure by default: user namespaces, cgroups, AppArmor, etc.</li>
+              <li>A REST API for managing system containers</li>
+              <li>A daemon that can do hypervisor-y things</li>
+              <li style="color: black">A framework for managing container base images</li>
             </ul>
           </div>
         </section>
@@ -210,6 +264,7 @@
         progress: true,
         history: true,
         center: true,
+        width: "75%",
 
         theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
         transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
