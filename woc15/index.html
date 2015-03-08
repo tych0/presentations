@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>The life and times of Linux containers</title>
+
+    <meta name="author" content="Tycho Andersen">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="reveal.js/css/theme/simple.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+      if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+      }
+    </script>
+
+    <style>
+      #canonicalLogoIntro {
+        vertical-align: middle;
+        display: inline-block;
+      }
+      #canonicalLogoIntro > img {
+        padding-bottom: 2px;
+        height: 30px;
+        width: auto;
+        border: none;
+        margin: 0;
+        box-shadow: none;
+      }
+
+      #logo {
+        opacity: 0;
+        -webkit-animation: fadein ease-in 1;
+        -webkit-animation-duration: 1s;
+        -webkit-animation-fill-mode: forwards;
+        -webkit-animation-play-state: paused;
+      }
+      #logo > img {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        width: 100px;
+        height: auto;
+      }
+
+      @-webkit-keyframes fadein {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @-webkit-keyframes fadeout {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+
+    </style>
+  </head>
+
+  <body>
+
+    <div id="logo"><img src="oh.png" alt="canonical logo"></img></div>
+
+    <div class="reveal">
+      <div class="slides">
+
+        <section>
+          <h3>the life and times of Linux Containers</h3>
+          <div>
+            <span><a href="http://tycho.ws">Tycho.Andersen</a> @</span>
+            <span id="canonicalLogoIntro"><img src="canonical.png" alt="Canonical"></img></span>
+            <span>.com</span>
+          </div>
+        </section>
+
+        <section>
+          <h2>Who am I?</h2>
+          <div>
+            <ul>
+              <li class="fragment">Functional programmer for a while</li>
+              <li class="fragment"><span>Canonical-er since mid 2013 workign on Cloud Stuff</span>
+                <ul>
+                  <li>LXD core developer</li>
+                  <li>LXC contributor</li>
+                  <li>CRIU contributor</li>
+                  <li>Openstack &amp; related</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2>What are containers?</h2>
+          <p>pretty picture</p>
+        </section>
+
+        <section>
+          <h2>First there were namespaces</h2>
+          <div>
+            <ul>
+              <li class="fragment">mount namespace in 2000, <code>unshare(CLONE_NEWNS)</code></li>
+              <li class="fragment">OpenVZ released in 2005</li>
+              <li class="fragment"><code>meiosis</code> checkpoint &amp; restore tool for *nixen</li>
+              <li class="fragment"><code>lxc</code><sup>2</sup> work begins inside IBM around 2007</li>
+              <li class="fragment"><code>meiosis</code> pid virtualization patch for Linux</li>
+              <li class="fragment">UTS namespaces (allow each container to have its own hostname)</li>
+              <li class="fragment">IPC namespaces (POSIX queues)
+              <li class="fragment">PID namespaces joint work between IBM &amp; Prallels</li>
+              </li>
+            <ul>
+          </div>
+        </section>
+
+        <section>
+          <h2>Then there were CGroups</h2>
+          <div>
+            <ul>
+              <li class="fragment">Google begin upstreaming CGroups in 2007</li>
+              <li class="fragment">Called "process controllers"</li>
+              <li class="fragment">Resource monitoring in addition to control</li>
+              <li class="fragment">2010 Kernel summit: agreed upon that there will be one Linux Container API</li>
+            </li>
+          </div>
+        </section>
+
+        <section>
+          <h2>So... what are containers?</h2>
+          <div>
+            <ul>
+              <li class="fragment">Containers are OS level virtualization</li>
+              <li class="fragment">Containers are implemented with a collection of kernel APIs</li>
+              <li class="fragment">Container engines use these APIs to create a container</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2>Container Security</h2>
+          <div>
+            <ul>
+              <li class="fragment">User namespaces: root inside the container is not root oustide</li>
+              <li class="fragment">SECCOMP, AppArmor, etc. also necessary</li>
+              <li class="fragment">Better than virtualization? A short story.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2>Containers today: a dichotomy</h2>
+          <div style="float: left; text-align: left; width:40%;">
+            <h3 class="fragment">App containers</h3>
+            <ul>
+              <li class="fragment">Docker</li>
+              <li class="fragment">Rocket</li>
+              <li class="fragment"><span>Designed with apps in mind</span>
+                <ul>
+                  <li class="fragment">(mostly) immutable filesystem</li>
+                  <li class="fragment">Dockerfile to set up app</li>
+                </ul>
+              </li>
+              <li class="fragment"><code>/usr/bin/apache2</code></li>
+            </ul>
+          </div>
+          <div style="float: right; text-align: left; width: 50%;">
+            <h3 class="fragment">System containers</h3>
+            <ul>
+              <li class="fragment">LXD</li>
+              <li class="fragment">OpenVZ</li>
+              <li class="fragment"><span>Designed with full Linux "virtualization" in mind</span>
+                <ul>
+                  <li class="fragment">Migration is a first class primitive</li>
+                  <li class="fragment">APIs for manipulating filesystems, running commands</li>
+                </ul>
+              </li>
+              <li class="fragment"><code>/sbin/init</code></li>
+            </li>
+          </div>
+        </section>
+
+        <section>
+          <h2>What about migration?</h2>
+          <p>Linus Torvalds on CRIU (kernel commit 09946950, 2012):</p>
+          <blockquote>&ldquo;A note on this: this is a project by various mad
+          Russians to perform c/r mainly from userspace, with various oddball
+          helper code added into the kernel where the need is demonstrated...
+          However I'm less confident than the developers that it will all
+          eventually work!&rdquo;</blockquote>
+        </section>
+
+        <section>
+          <h2>CRIU History</h2>
+          <div>
+            <ul>
+              <li class="fragment">2011: CRIU born as a Parallels project</li>
+              <li class="fragment">2012: First patches get merged upstream</li>
+              <li class="fragment">2013: OpenVZ and mainline parity</li>
+              <li class="fragment">2014: LXC 1.1 released, <code>lxc-checkpoint</code></li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          
+        </section>
+
+      </div>
+    </div>
+
+    <script src="reveal.js/lib/js/head.min.js"></script>
+    <script src="reveal.js/js/reveal.js"></script>
+
+    <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: false,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Parallax scrolling
+        // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+        // parallaxBackgroundSize: '2100px 900px',
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+      });
+
+      Reveal.addEventListener( 'slidechanged', function( event ) {
+        if (!Reveal.isFirstSlide() && !Reveal.isLastSlide()) {
+          document.getElementById('logo').style.webkitAnimation = "fadein 1s running forwards";
+        } else {
+          document.getElementById('logo').style.webkitAnimation = "fadeout 1s running forwards";
+        }
+      });
+
+    </script>
+
+  </body>
+</html>
