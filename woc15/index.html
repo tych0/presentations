@@ -59,6 +59,11 @@
         height: auto;
       }
 
+      img {
+        border: none !important;
+        box-shadow: none !important;
+      }
+
       @-webkit-keyframes fadein {
         from { opacity: 0; }
         to { opacity: 1; }
@@ -93,7 +98,7 @@
           <div>
             <ul>
               <li class="fragment">Functional programmer for a while</li>
-              <li class="fragment"><span>Canonical-er since mid 2013 workign on Cloud Stuff</span>
+              <li class="fragment"><span>Canonical-er since mid 2013 working on Cloud Stuff</span>
                 <ul>
                   <li>LXD core developer</li>
                   <li>LXC contributor</li>
@@ -107,7 +112,22 @@
 
         <section>
           <h2>What are containers?</h2>
-          <p>pretty picture</p>
+        </section>
+
+        <section>
+          <img src="hypervisor-diagram.png" alt="foo"></img>
+        </section>
+
+        <section>
+          <img src="container-diagram.png" alt="foo" style="float: left;"></img>
+        </section>
+
+        <section>
+          <img src="container-diagram-plus.png" alt="foo" style="float: right;"></img>
+        </section>
+
+        <section>
+          <h2>How did we get here?</h2>
         </section>
 
         <section>
@@ -121,7 +141,7 @@
               <li class="fragment"><code>meiosis</code> pid virtualization patch for Linux</li>
               <li class="fragment">UTS namespaces (allow each container to have its own hostname)</li>
               <li class="fragment">IPC namespaces (POSIX queues)
-              <li class="fragment">PID namespaces joint work between IBM &amp; Prallels</li>
+              <li class="fragment">PID namespaces joint work between IBM &amp; Parallels</li>
               </li>
             <ul>
           </div>
@@ -154,30 +174,50 @@
           <h2>Container Security</h2>
           <div>
             <ul>
-              <li class="fragment">User namespaces: root inside the container is not root oustide</li>
+              <li class="fragment">User namespaces: root inside the container is not root outside</li>
               <li class="fragment">SECCOMP, AppArmor, etc. also necessary</li>
+              <li class="fragment"><code>CAP_SYS_ADMIN</code> and other capabilities</li>
               <li class="fragment">Better than virtualization? A short story.</li>
             </ul>
           </div>
         </section>
 
         <section>
-          <h2>Containers today: a dichotomy</h2>
-          <div style="float: left; text-align: left; width:40%;">
-            <h3 class="fragment">App containers</h3>
+          <h2>What about migration?</h2>
+          <div class="fragment">
+            <p>Linus Torvalds on CRIU (kernel commit 09946950, 2012):</p>
+            <blockquote>&ldquo;A note on this: this is a project by various mad
+            Russians to perform c/r mainly from userspace, with various oddball
+            helper code added into the kernel where the need is demonstrated...
+            However I'm less confident than the developers that it will all
+            eventually work!&rdquo;</blockquote>
+          </div>
+        </section>
+
+        <section>
+          <h2>CRIU History</h2>
+          <div>
             <ul>
-              <li class="fragment">Docker</li>
-              <li class="fragment">Rocket</li>
-              <li class="fragment"><span>Designed with apps in mind</span>
-                <ul>
-                  <li class="fragment">(mostly) immutable filesystem</li>
-                  <li class="fragment">Dockerfile to set up app</li>
-                </ul>
-              </li>
-              <li class="fragment"><code>/usr/bin/apache2</code></li>
+              <li class="fragment">Pre 2011: OpenVZ has some migration support in the kernel</li>
+              <li class="fragment">2011: CRIU born as a Parallels project</li>
+              <li class="fragment">2012: First patches get merged upstream</li>
+              <li class="fragment">2013: OpenVZ and mainline parity</li>
+              <li class="fragment">2014: LXC 1.1 released, <code>lxc-checkpoint</code></li>
             </ul>
           </div>
-          <div style="float: right; text-align: left; width: 50%;">
+        </section>
+
+        <section>
+          <h2>Containers today</h2>
+        </section>
+
+        <section>
+          <img src="container-diagram-plus.png" alt="foo" style="float: right;"></img>
+        </section>
+
+        <section>
+          <h2>Containers today: a dichotomy</h2>
+          <div style="float: left; text-align: left; width: 50%;">
             <h3 class="fragment">System containers</h3>
             <ul>
               <li class="fragment">LXD</li>
@@ -191,32 +231,73 @@
               <li class="fragment"><code>/sbin/init</code></li>
             </li>
           </div>
-        </section>
-
-        <section>
-          <h2>What about migration?</h2>
-          <p>Linus Torvalds on CRIU (kernel commit 09946950, 2012):</p>
-          <blockquote>&ldquo;A note on this: this is a project by various mad
-          Russians to perform c/r mainly from userspace, with various oddball
-          helper code added into the kernel where the need is demonstrated...
-          However I'm less confident than the developers that it will all
-          eventually work!&rdquo;</blockquote>
-        </section>
-
-        <section>
-          <h2>CRIU History</h2>
-          <div>
+          <div style="float: right; text-align: left; width:40%;">
+            <h3 class="fragment">App containers</h3>
             <ul>
-              <li class="fragment">2011: CRIU born as a Parallels project</li>
-              <li class="fragment">2012: First patches get merged upstream</li>
-              <li class="fragment">2013: OpenVZ and mainline parity</li>
-              <li class="fragment">2014: LXC 1.1 released, <code>lxc-checkpoint</code></li>
+              <li class="fragment">Docker</li>
+              <li class="fragment">Rocket</li>
+              <li class="fragment"><span>Designed with apps in mind</span>
+                <ul>
+                  <li class="fragment">(mostly) immutable filesystem</li>
+                  <li class="fragment">Dockerfile to set up app</li>
+                </ul>
+              </li>
+              <li class="fragment"><code>/usr/bin/apache2</code></li>
             </ul>
           </div>
         </section>
 
         <section>
-          
+          <h2>LXD</h2>
+          <div>
+            <ul>
+              <li class="fragment">Announced in 2014</li>
+              <li class="fragment">Based on Linux Containers (LXC)</li>
+              <li class="fragment">Secure by default: user namespaces, cgroups, AppArmor, etc.</li>
+              <li class="fragment">A REST API for managing system containers</li>
+              <li class="fragment">A daemon that can do hypervisor-y things</li>
+              <li class="fragment">A framework for managing container base images</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h3>Creating a container</h3>
+          <div style="text-align: left" class="fragment">
+            <code><span style="color: grey">wget --no-check-certificate --certificate=~/.config/lxc/client.crt --private-key=~/.config/lxc/client.key -O - -q</span> https://127.0.0.1:8443/1.0/containers --method=POST --body-data='{"name": "manual", ...}'</code>
+          </div>
+          <br></br>
+          <code class="fragment">{"type":"async","operation":"/1.0/operations/ae5b7709-213d-4b51-b4e2-825e4ac9d45c"}</code>
+        </section>
+
+        <section>
+          <h3><code>containers</code> endpoint</h3>
+          <div style="text-align: left" class="fragment">
+            <code><span style="color: grey">wget --no-check-certificate --certificate=~/.config/lxc/cert.pem --private-key=~/.config/lxc/key.pem -O - -q</span> https://127.0.0.1:8443/1.0/containers/foo</code>
+          </div>
+          <br></br>
+          <code style="text-align: left" class="fragment">
+            <div style="color: grey">{"type":"sync","result":"success","metadata":</div>
+            <div>&nbsp; &nbsp;{"name":"foo", "config":[], "profiles":[],</div>
+            <div>&nbsp; &nbsp; &nbsp; &nbsp;"status":{"state":"RUNNING", ...}}</div>
+            <div style="color: grey">}</div>
+          </code>
+        </section>
+
+        <section>
+          <p><code>lxc move container otherhost:container</code></p>
+          <img src="migration.jpg" alt="Container Migration" style="border: none; box-shadow: none;"></img>
+        </section>
+
+        <section>
+          <h2>Demo!</h2>
+        </section>
+
+        <section>
+          <img src="lxd.jpg" alt="lxd" style="border: none; box-shadow: none;"></img>
+          <h2>Grazie!</h2>
+          <div><a href="https://github.com/lxc/lxd/">github.com/lxc/lxd</a></div>
+          <div><p>Thanks to James Bottomley for the container/vm drawings</p></div>
         </section>
 
       </div>
