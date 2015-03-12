@@ -7,3 +7,7 @@ something like:
     cd lca2015 # or the one you're interested in
     python -m SimpleHTTPServer
     # open a browser to localhost:8000
+
+I also mirror these on [slides.tycho.ws](http://slides.tycho.ws), so if you
+just want to see them in action you can simply go there and select the
+presentation you want.
