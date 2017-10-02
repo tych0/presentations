@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include <stddef.h>
+#include <errno.h>
 #include <sys/prctl.h>
 #include <sys/ptrace.h>
 #include <linux/limits.h>
@@ -19,7 +20,7 @@ static int filter_syscall(int syscall_nr)
 	struct sock_filter filter[] = {
 		BPF_STMT(BPF_LD+BPF_W+BPF_ABS, offsetof(struct seccomp_data, nr)),
 		BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, syscall_nr, 0, 1),
-		BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_KILL),
+		BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_ERRNO | ENOSYS),
 		BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_ALLOW),
 	};
 
@@ -28,7 +29,15 @@ static int filter_syscall(int syscall_nr)
 		.filter = filter,
 	};
 
-	if (syscall(__NR_seccomp, SECCOMP_SET_MODE_FILTER, 0, &bpf_prog) < 0) {
+	unsigned int flags = 0;
+
+	/*
+	 * Here's the magic: with this flag, the above policy generates an
+	 * audit log.
+	 */
+	// flags |= SECCOMP_FILTER_FLAG_LOG;
+
+	if (syscall(__NR_seccomp, SECCOMP_SET_MODE_FILTER, flags, &bpf_prog) < 0) {
 		perror("prctl failed");
 		return -1;
 	}
@@ -55,7 +64,6 @@ int main(int argc, char ** argv)
 	}
 
 	if (pid == 0) {
-
 		sk = sk_pair[1];
 		close(sk_pair[0]);
 
@@ -73,17 +81,26 @@ int main(int argc, char ** argv)
 			_exit(1);
 		}
 
-		/* We expect to be killed by our policy above. */
-		ptrace(PTRACE_TRACEME);
+		if (ptrace(PTRACE_TRACEME) < 0) {
+			if (errno != ENOSYS) {
+				perror("ptrace()");
+				_exit(1);
+			}
 
-		syscall(__NR_exit, 0);
+			printf("ptrace masked correctly\n");
+
+			_exit(0);
+		}
+
+		printf("ptrace succeded?\n");
+		_exit(1);
 	}
 
 	sk = sk_pair[0];
 	close(sk_pair[1]);
 
 	if ((ret = read(sk, &c, 1)) != 1) {
-		perror("read");
+		printf("sync failed, task died?\n");
 		goto err;
 	}
 
@@ -92,8 +109,8 @@ int main(int argc, char ** argv)
 		goto err;
 	}
 
-	if (WTERMSIG(status) != SIGSYS) {
-		printf("expected SIGSYS, got %d", WTERMSIG(status));
+	if (!WIFEXITED(status) || WEXITSTATUS(status)) {
+		printf("expected exit(0), got %d\n", WEXITSTATUS(status));
 		return 1;
 	}
 
