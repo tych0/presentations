@@ -67,10 +67,6 @@ int main(int argc, char ** argv)
 		sk = sk_pair[1];
 		close(sk_pair[0]);
 
-		/*
-		 * Let's install a few filters separately to make sure the
-		 * chaining actually works.
-		 */
 		if (filter_syscall(__NR_ptrace) < 0)
 			_exit(1);
 
