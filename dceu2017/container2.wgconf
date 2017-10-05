@@ -1,0 +1,8 @@
+[Interface]
+PrivateKey=8CGX/bixmi504ihmBuSbJxYQ2l4F1hJtw0PFU01H3kE=
+ListenPort=9992
+
+[Peer]
+Endpoint=192.168.122.126:9991
+PublicKey=0wfkE7gRkxGD7gRQVxyyHDaxlgPc7tpVVrrZs8iepjI=
+AllowedIps=0.0.0.0/0

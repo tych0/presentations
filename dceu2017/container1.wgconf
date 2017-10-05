@@ -1,0 +1,8 @@
+[Interface]
+PrivateKey=+OJp2Lpv2TDXK8rmeIhP2krSeBOb0okFKeZEt16tJH8=
+ListenPort=9991
+
+[Peer]
+Endpoint=192.168.122.151:9992
+PublicKey=qHrIKvDe1eQVt76PpwgKFPw5iWlWtE41Ke9CfCwtWCw=
+AllowedIps=0.0.0.0/0
