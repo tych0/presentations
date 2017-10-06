@@ -21,6 +21,4 @@ profile osseu {
     deny mount fstype=proc,
     deny mount fstype=sysfs,
     deny mount fstype=securityfs,
-
-    deny mount,
 }
