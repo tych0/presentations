@@ -20,7 +20,7 @@ static int filter_syscall(int syscall_nr)
 	struct sock_filter filter[] = {
 		BPF_STMT(BPF_LD+BPF_W+BPF_ABS, offsetof(struct seccomp_data, nr)),
 		BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, syscall_nr, 0, 1),
-		BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_ERRNO | ENOSYS),
+		BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_LOG),
 		BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_ALLOW),
 	};
 
@@ -64,10 +64,20 @@ int main(int argc, char ** argv)
 	}
 
 	if (pid == 0) {
+		FILE *f;
+		char buf[2];
+		int i;
+
 		sk = sk_pair[1];
 		close(sk_pair[0]);
 
-		if (filter_syscall(__NR_ptrace) < 0)
+		if (filter_syscall(__NR_open) < 0)
+			_exit(1);
+
+		if (filter_syscall(__NR_read) < 0)
+			_exit(1);
+
+		if (filter_syscall(__NR_close) < 0)
 			_exit(1);
 
 		printf("SECCOMP_MODE_FILTER is enabled\n");
@@ -77,19 +87,19 @@ int main(int argc, char ** argv)
 			_exit(1);
 		}
 
-		if (ptrace(PTRACE_TRACEME) < 0) {
-			if (errno != ENOSYS) {
-				perror("ptrace()");
-				_exit(1);
-			}
-
-			printf("ptrace masked correctly\n");
-
-			_exit(0);
+		f = fopen("/proc/self/cgroup", "r");
+		if (!f) {
+			perror("fopen");
+			_exit(1);
 		}
 
-		printf("ptrace succeded?\n");
-		_exit(1);
+		for (i = 0; i < 10; i++) {
+			fread(buf, sizeof(char), 2, f);
+		}
+
+		fclose(f);
+
+		_exit(0);
 	}
 
 	sk = sk_pair[0];
