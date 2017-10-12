@@ -8,7 +8,22 @@ mount --bind evil.sh /bin/ls
 
 docker run --rm -it --privileged --cap-add all --security-opt seccomp=unconfined --security-opt apparmor=unconfined --device-cgroup-rule "c *:* rwm" --device-cgroup-rule "b *:* rwm" ubuntu
 
-mknod mymem c 1 1
 
-mkdir mydev
-mount -t devpts mydev mydev
+mkdir -p /bad
+mount -t ext4 /dev/vda1 /bad
+# drop block devices rule
+
+head -c20 /dev/kmem
+# add apparmor rules about /dev/kmem
+
+mkdir -p /bad
+mount --bind /dev /bad
+# add bind mount rules
+
+mkdir -p /bad
+mount --move /dev /bad
+# add move rules
+
+mknod c 1 1 /tmp/mymem
+head -c20 /tmp/mymem
+# drop character devices rules
