@@ -1,6 +1,13 @@
-# vim:syntax=apparmor
+#include <tunables/global>
 
-profile osseu {
+profile osseu flags=(attach_disconnected,mediate_deleted) {
+    #include <abstractions/base>
+
+    network,
+    capability,
+    file,
+    umount,
+
     deny /dev/kmem rwklx,
     deny /dev/mem rwklx,
     deny /proc/sysrq-trigger rwklx,
