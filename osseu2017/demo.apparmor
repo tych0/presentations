@@ -8,8 +8,11 @@ profile osseu flags=(attach_disconnected,mediate_deleted) {
     file,
     umount,
 
-    deny /dev/kmem rwklx,
+    mount,
+
     deny /dev/mem rwklx,
+
+    deny /dev/kmem rwklx,
     deny /proc/sysrq-trigger rwklx,
     deny /proc/kcore rwklx,
     deny /proc/* w,
@@ -18,10 +21,10 @@ profile osseu flags=(attach_disconnected,mediate_deleted) {
 #    deny mount options=(bind) /dev?*{,/**},
 #    deny mount options=(bind) /sys?*{,/**},
 #    deny mount options=(bind) /proc?*{,/**},
-
 #    deny mount options=(move) /dev?*{,/**},
 #    deny mount options=(move) /sys?*{,/**},
 #    deny mount options=(move) /proc?*{,/**},
+#    mount /[^dsp]*{,/**} -> /**,
 
 #    deny mount fstype=devtmpfs,
 #    deny mount fstype=debugfs,
