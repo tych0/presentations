@@ -20,10 +20,7 @@ mkdir -p /bad
 mount --bind /dev /bad
 # add bind mount rules
 
-mkdir -p /bad
-mount --move /dev /bad
-# add move rules
-
 mknod c 1 1 /tmp/mymem
 head -c20 /tmp/mymem
 # drop character devices rules
+# drop --privileged
